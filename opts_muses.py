@@ -172,8 +172,21 @@ def parse_opt():
     parser.add_argument(
         '--wterm',
         type=bool,
-        default=False)    
-    
+        default=False)
+
+    # Hierarchical Frame Memory (drop-in replacement for flat HistoryUnit)
+    parser.add_argument('--use_hier_memory', type=int, default=1,
+                        help='1 = HierarchicalMemoryUnit, 0 = original flat HistoryUnit')
+    parser.add_argument('--mem_num_levels', type=int, default=3)
+    parser.add_argument('--mem_sizes', type=int, nargs='+', default=[16, 12, 8],
+                        help='per-level slot capacity, length must equal mem_num_levels')
+    parser.add_argument('--mem_level_strides', type=int, nargs='+', default=[1, 2, 4],
+                        help='per-level temporal stride, length must equal mem_num_levels')
+    parser.add_argument('--mem_merge_thresh', type=float, default=0.75,
+                        help='cosine-sim threshold for merge vs. insert')
+    parser.add_argument('--mem_age_decay', type=float, default=0.01,
+                        help='age weight in importance = usage - age_decay * age')
+
     args = parser.parse_args()
 
     return args
